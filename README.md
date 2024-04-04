@@ -8,4 +8,3 @@ I may consider adding a typing system or more advanced features later on. I don'
 This interpreter uses the lambda (λ) symbol. It does not accept other symbols.
 An example is shown with the Church booleans:
 `(λp.λq.p p q)(λx.λy.x)(λx.λy.y)` will output as `λx.λy.x`
-``
