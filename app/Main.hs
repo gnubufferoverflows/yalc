@@ -9,6 +9,31 @@ import Data.Char
 import System.Environment
 import Data.List
 import Control.Monad
+import Data.Maybe
+import Control.Applicative
+
+type Label = [Char]
+data Lambda = Var Label | Apply Lambda Lambda | Lam Label Lambda
+
+subst :: Label -> Lambda -> Lambda -> Lambda 
+subst var what expr = case expr of 
+                        Var x -> if x == var then what else Var x 
+                        Apply e1 e2 -> Apply (subst var what e1) (subst var what e2)
+                        Lam x e -> if x == var then Lam x e else Lam x (subst var what e) 
+
+betaReduce :: Lambda -> Maybe Lambda
+betaReduce expr = case expr of 
+                    Apply (Lam x e1) e2 -> Just $ subst x e2 e1
+                    Apply e1 e2 -> Apply <$> betaReduce e1 <*> pure e2 <|> Apply e1 <$> betaReduce e2
+                    Lam x e -> Lam x <$> betaReduce e 
+                    _ -> Nothing
+
+-- runs beta reduction + alpha conversion
+lambdaReduce :: Lambda -> Lambda
+lambdaReduce expr = fromMaybe expr $ do 
+    reduced <- betaReduce expr 
+    return $ lambdaReduce reduced
+
 
 eitherToMaybeTM :: Monad m => m (Either b a) -> MaybeT m a 
 eitherToMaybeTM m = MaybeT $ m >>= (\e -> case e of
