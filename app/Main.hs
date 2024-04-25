@@ -44,7 +44,7 @@ newVar expr var = head $ filter (`notElem` freeVars expr) (fmap (var ++) (fmap s
 
 freeVars :: Lambda -> [Label]
 freeVars (Var x)       = [x]
-freeVars (Lam x e)     = freeVars e \\ [x]
+freeVars (Lam x e)     = freeVars e \\ [x] -- difference between lists
 freeVars (Apply e1 e2) = freeVars e1 `union` freeVars e2
 
 
