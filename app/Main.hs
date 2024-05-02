@@ -9,11 +9,7 @@ import Data.Char
 import System.Environment
 import Data.List
 import Control.Monad
-import Data.Maybe
-import Control.Applicative
-
-type Label = [Char]
-data Lambda = Var Label | Apply Lambda Lambda | Lam Label Lambda deriving Show
+import Scanner
 
 instance Semigroup Lambda where 
     (<>) = Apply
