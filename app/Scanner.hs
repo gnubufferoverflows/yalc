@@ -39,7 +39,7 @@ var = Var <$> identifier
 
 lambda :: Parser Lambda
 lambda = do
-  symbol "λ"
+  symbol "\\"
   args <- some identifier
   symbol "."
   body <- expr

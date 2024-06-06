@@ -9,7 +9,9 @@ import Data.Char
 import System.Environment
 import Data.List
 import Control.Monad
+import Text.Megaparsec (runParser)
 import Scanner
+import Data.Text.Internal (pack)
 
 instance Semigroup Lambda where 
     (<>) = Apply
@@ -90,7 +92,9 @@ safeRead f = eitherToMaybeTM $ (try $ readFile' f :: IO (Either IOException Stri
 
 -- most likely, to be moved to another file to keep this stuff and the pure code separate
 projectCode :: String -> String
-projectCode = error "not yet implemented"
+projectCode s = case runParser parseLambda "lambda.lambda" (pack s) of
+                  Left err -> show err
+                  Right (old, results) -> show $ lambdaReduce results
 
 main :: IO ()
 main = do
